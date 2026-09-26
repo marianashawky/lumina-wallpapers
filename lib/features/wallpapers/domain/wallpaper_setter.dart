@@ -2,6 +2,8 @@ import 'wallpaper.dart';
 
 enum SetWallpaperStatus { applied, needsPicker, failed, unsupported }
 
+enum WallpaperTarget { home, lock, both }
+
 class SetWallpaperResult {
   const SetWallpaperResult(this.status, this.message);
 
@@ -15,6 +17,7 @@ abstract class WallpaperSetter {
   Future<SetWallpaperResult> setStaticWallpaper(
     Wallpaper wallpaper, {
     required bool highQuality,
+    WallpaperTarget target = WallpaperTarget.both,
     void Function(double progress)? onProgress,
   });
 
@@ -34,11 +37,12 @@ extension WallpaperSetterDispatch on WallpaperSetter {
   Future<SetWallpaperResult> setWallpaper(
     Wallpaper wallpaper, {
     required bool highQuality,
+    WallpaperTarget target = WallpaperTarget.both,
     void Function(double progress)? onProgress,
   }) {
     switch (wallpaper.type) {
       case WallpaperType.static:
-        return setStaticWallpaper(wallpaper, highQuality: highQuality, onProgress: onProgress);
+        return setStaticWallpaper(wallpaper, highQuality: highQuality, target: target, onProgress: onProgress);
       case WallpaperType.live:
         return setLiveWallpaper(wallpaper, highQuality: highQuality, onProgress: onProgress);
       case WallpaperType.video:

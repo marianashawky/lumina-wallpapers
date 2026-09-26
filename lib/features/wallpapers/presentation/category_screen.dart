@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/app_scope.dart';
+import '../../../core/ads/ad_banner_slot.dart';
 import '../../../app/navigation.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
@@ -139,6 +140,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ],
                 ),
               ),
+            const AdBannerSlot(),
             Expanded(child: _body(padding, title)),
           ],
         ),

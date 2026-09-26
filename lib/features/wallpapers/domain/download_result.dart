@@ -1,4 +1,4 @@
-enum DownloadStatus { saved, alreadySaved, failed }
+enum DownloadStatus { saved, alreadySaved, failed, permissionDenied, network, storage }
 
 class DownloadResult {
   const DownloadResult(this.status, this.message);

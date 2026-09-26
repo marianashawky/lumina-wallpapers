@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../app/app_scope.dart';
+import '../../../core/ads/ad_banner_slot.dart';
 import '../../../app/navigation.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/shimmer_box.dart';
@@ -187,6 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
         ],
+        const AdBannerSlot(),
         if (_wallpapers.isNotEmpty)
           WallpaperMasonry(
             wallpapers: _wallpapers,

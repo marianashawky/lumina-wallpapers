@@ -3,21 +3,30 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../constants/ads_constants.dart';
+import 'ad_config.dart';
 
 class AdService {
+  AdService({AdConfig? config}) : config = config ?? AdConfig.current;
+
+  final AdConfig config;
   InterstitialAd? _interstitial;
   BannerAd? _banner;
   int _actionsSinceAd = 0;
 
   Future<void> initialize() async {
+    if (!config.anyPlacementEnabled) return;
     await MobileAds.instance.initialize();
-    _loadInterstitial();
+    if (config.interstitialEnabled && config.interstitialAdUnitId.isNotEmpty) {
+      _loadInterstitial();
+    }
   }
 
   Widget buildBanner() {
+    if (!config.bannerEnabled || config.bannerAdUnitId.isEmpty) {
+      return const SizedBox.shrink();
+    }
     _banner ??= BannerAd(
-      adUnitId: AdsConstants.bannerAdUnitId,
+      adUnitId: config.bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
@@ -31,7 +40,7 @@ class AdService {
 
   void _loadInterstitial() {
     InterstitialAd.load(
-      adUnitId: AdsConstants.interstitialAdUnitId,
+      adUnitId: config.interstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) => _interstitial = ad,
@@ -41,6 +50,7 @@ class AdService {
   }
 
   Future<void> maybeShowInterstitial() async {
+    if (!config.interstitialEnabled || config.interstitialAdUnitId.isEmpty) return;
     _actionsSinceAd++;
     if (_actionsSinceAd < 3) return;
     final ad = _interstitial;
@@ -64,9 +74,12 @@ class AdService {
   }
 
   Future<bool> showRewarded() {
+    if (!config.rewardedEnabled || config.rewardedAdUnitId.isEmpty) {
+      return Future.value(false);
+    }
     final completer = Completer<bool>();
     RewardedAd.load(
-      adUnitId: AdsConstants.rewardedAdUnitId,
+      adUnitId: config.rewardedAdUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {

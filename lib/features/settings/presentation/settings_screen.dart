@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/app_scope.dart';
+import '../../../core/ads/ad_banner_slot.dart';
 import '../../../core/constants/app_info.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../data/local/local_store.dart';
@@ -91,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
                 trailing: Text(AppInfo.version),
               ),
               const SizedBox(height: AppSpacing.lg),
-              const _AdSlot(),
+              const AdBannerSlot(),
             ],
           );
         },
@@ -118,37 +119,30 @@ class _Label extends StatelessWidget {
   }
 }
 
-class _AdSlot extends StatelessWidget {
-  const _AdSlot();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: AppScope.of(context).ads.buildBanner());
-  }
-}
-
 const _about = '''
 Lumina is a wallpaper studio for stills, motion, and video.
 
-Collections load images from Unsplash and short videos from Pexels, so previews need a connection.
+Collections load images from Unsplash and short videos from Pexels, so previews need a connection. Each wallpaper can show its source and license on the details screen.
 
-On Android, still wallpapers are applied with the system wallpaper manager. Motion wallpapers run in a live wallpaper service that slowly pans the image. Video wallpapers use that same service with a media player, then Android asks you to confirm Lumina as the live wallpaper.
+On Android, still wallpapers can be applied to the home screen, the lock screen, or both. Motion wallpapers run in a live wallpaper service that slowly pans the image. Video wallpapers use that same service with a media player, then Android asks you to confirm Lumina as the live wallpaper.
 
-Premium marks are prepared for a future subscription. Nothing in this version is locked.
+Premium marks are prepared for a future subscription. Nothing in this version is locked. Advertising placements are prepared but turned off until a publisher AdMob account is connected.
 ''';
 
 const _privacy = '''
-Favorites, search history, download history, and settings stay on this device.
+Favorites, search history, download history, and settings stay on this device. Lumina does not ask you to create an account.
 
-Lumina does not ask you to create an account.
+Saved wallpapers are written to your gallery after you allow storage access. That permission is requested when you save, not when the app opens.
 
-Saved wallpapers are written to your gallery after you allow storage access.
+Remote previews are requested from Unsplash and Pexels when you open them. Those services receive the network request needed to deliver the file.
 
-Remote previews are requested from their catalog addresses when you open them. Advertisements, when shown, are requested through Google Mobile Ads. This build uses test ad units.
+The app includes the Google Mobile Ads SDK so advertising can be enabled later. In this build, banner, interstitial, rewarded, and app-open placements are switched off, so no ad is requested. When a publisher turns ads on, Google may process an advertising identifier and technical device data under Google's own policy. That is not the same as Lumina running its own account system.
+
+There is no in-app analytics account in this build. To ask for deletion of on-device favorites or search history, clear the app data from Android settings or use Clear cache for preview files.
 ''';
 
 const _terms = '''
-Wallpapers are for personal use on your own devices.
+Wallpapers are for personal use on your own devices. Catalog items keep the license shown on the details screen. Do not treat player, club, or character artwork as cleared unless that license says so.
 
 Live and video installation depends on Android and the system wallpaper picker. If the picker is dismissed, the wallpaper is not changed.
 

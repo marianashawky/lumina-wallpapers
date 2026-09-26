@@ -15,9 +15,17 @@ class ShareService {
       highQuality: highQuality,
       video: wallpaper.playsVideo,
     );
-    await Share.shareXFiles(
-      [XFile(file.path)],
-      text: '${wallpaper.title} — ${AppInfo.name}',
-    );
+    try {
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: '${wallpaper.title} — ${AppInfo.name}',
+      );
+    } finally {
+      if (file.existsSync()) {
+        try {
+          file.deleteSync();
+        } catch (_) {}
+      }
+    }
   }
 }

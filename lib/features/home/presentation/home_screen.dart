@@ -104,6 +104,7 @@ class _HomeBody extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.lg),
+        const SectionHeader(title: 'Featured'),
         ListenableBuilder(
           listenable: AppScope.of(context).settings,
           builder: (context, _) => _Hero(wallpaper: feed.hero),
@@ -140,6 +141,22 @@ class _HomeBody extends StatelessWidget {
           },
         ),
         WallpaperCarousel(wallpapers: feed.cars, heroPrefix: 'home-cars', onOpen: (wallpaper, tag) => openWallpaper(context, wallpaper, heroTag: tag)),
+        const SectionHeader(title: 'More categories'),
+        SizedBox(
+          height: 44,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final category = categories[index];
+              return ActionChip(
+                label: Text(category.name),
+                onPressed: () => openCategory(context, category),
+              );
+            },
+          ),
+        ),
         const SectionHeader(title: 'Trending'),
         WallpaperMasonry(
           wallpapers: feed.trending,

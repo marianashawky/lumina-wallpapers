@@ -17,9 +17,10 @@ class PlatformWallpaperSetter implements WallpaperSetter {
   Future<SetWallpaperResult> setStaticWallpaper(
     Wallpaper wallpaper, {
     required bool highQuality,
+    WallpaperTarget target = WallpaperTarget.both,
     void Function(double progress)? onProgress,
   }) {
-    return _apply(wallpaper, kind: 'static', highQuality: highQuality, onProgress: onProgress);
+    return _apply(wallpaper, kind: 'static', highQuality: highQuality, target: target, onProgress: onProgress);
   }
 
   @override
@@ -43,6 +44,7 @@ class PlatformWallpaperSetter implements WallpaperSetter {
     Wallpaper wallpaper, {
     required String kind,
     required bool highQuality,
+    WallpaperTarget target = WallpaperTarget.both,
     void Function(double progress)? onProgress,
   }) async {
     if (!Platform.isAndroid) {
@@ -62,6 +64,7 @@ class PlatformWallpaperSetter implements WallpaperSetter {
       final status = await _channel.invokeMethod<String>(method, {
         'path': file.path,
         'kind': kind,
+        'target': target.name,
       });
       switch (status) {
         case 'ok':

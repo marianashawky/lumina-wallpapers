@@ -22,6 +22,9 @@ class Wallpaper {
     this.isTrending = false,
     this.isPremium = false,
     this.downloads = 0,
+    this.catalogSource,
+    this.author,
+    this.license,
   });
 
   final String id;
@@ -42,6 +45,15 @@ class Wallpaper {
   final bool isPremium;
   final DateTime createdAt;
   final int downloads;
+  final String? catalogSource;
+  final String? author;
+  final String? license;
+
+  String? get creditLine {
+    final parts = [catalogSource, author, license].whereType<String>().where((part) => part.isNotEmpty);
+    if (parts.isEmpty) return null;
+    return parts.join(' · ');
+  }
 
   bool get playsMotion => type == WallpaperType.live || type == WallpaperType.animated;
 

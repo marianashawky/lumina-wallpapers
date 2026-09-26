@@ -38,6 +38,8 @@ Wallpaper _net({
     isPremium: premium,
     createdAt: createdAt,
     downloads: trending ? 24000 : 6000,
+    catalogSource: videoUrl == null ? 'Unsplash' : 'Unsplash, Pexels',
+    license: videoUrl == null ? 'Unsplash License' : 'Unsplash License, Pexels License',
   );
 }
 

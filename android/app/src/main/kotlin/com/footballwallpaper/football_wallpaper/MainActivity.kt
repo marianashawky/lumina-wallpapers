@@ -18,7 +18,8 @@ class MainActivity : FlutterActivity() {
                     "sdkInt" -> result.success(Build.VERSION.SDK_INT)
                     "setWallpaper" -> {
                         val path = call.argument<String>("path")
-                        result.success(if (path.isNullOrEmpty()) "fail" else applyStatic(path))
+                        val target = call.argument<String>("target") ?: "both"
+                        result.success(if (path.isNullOrEmpty()) "fail" else applyStatic(path, target))
                     }
                     "setLiveWallpaper" -> {
                         val path = call.argument<String>("path")
@@ -30,7 +31,7 @@ class MainActivity : FlutterActivity() {
             }
     }
 
-    private fun applyStatic(path: String): String {
+    private fun applyStatic(path: String, target: String): String {
         return try {
             val (w, h) = WallpaperBitmaps.screenSize(this)
             val decoded = WallpaperBitmaps.decode(path, w, h) ?: return "fail"
@@ -38,12 +39,12 @@ class MainActivity : FlutterActivity() {
             if (fitted !== decoded) decoded.recycle()
             val wm = WallpaperManager.getInstance(this)
             if (Build.VERSION.SDK_INT >= 24) {
-                wm.setBitmap(
-                    fitted,
-                    null,
-                    true,
-                    WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK,
-                )
+                val flags = when (target) {
+                    "home" -> WallpaperManager.FLAG_SYSTEM
+                    "lock" -> WallpaperManager.FLAG_LOCK
+                    else -> WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK
+                }
+                wm.setBitmap(fitted, null, true, flags)
             } else {
                 @Suppress("DEPRECATION")
                 wm.setBitmap(fitted)
@@ -81,7 +82,7 @@ class MainActivity : FlutterActivity() {
                 startActivity(intent)
                 "picker"
             } catch (_: Exception) {
-                if (video) "fail" else applyStatic(dest.absolutePath)
+                if (video) "fail" else applyStatic(dest.absolutePath, "both")
             }
         } catch (_: Exception) {
             "fail"

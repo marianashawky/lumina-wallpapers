@@ -18,4 +18,4 @@ Release APK:
 flutter build apk --release
 ```
 
-Replace the AdMob test IDs in `lib/core/constants/ads_constants.dart` and `android/app/src/main/AndroidManifest.xml` before publishing.
+Before publishing, put your release keystore in `android/key.properties` and your AdMob app id in `android/local.properties` as `admob.app.id`. Production ad unit IDs are compile-time defines: `ADMOB_BANNER_ID`, `ADMOB_INTERSTITIAL_ID`, and `ADMOB_REWARDED_ID`. Placements stay off until those flags are enabled in `AdConfig`.

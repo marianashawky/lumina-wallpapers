@@ -6,6 +6,7 @@ class PlatformWallpaperSetter implements WallpaperSetter {
   Future<SetWallpaperResult> setStaticWallpaper(
     Wallpaper wallpaper, {
     required bool highQuality,
+    WallpaperTarget target = WallpaperTarget.both,
     void Function(double progress)? onProgress,
   }) async {
     return _unsupported;

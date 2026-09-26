@@ -38,4 +38,6 @@ app.*.map.json
 
 # Local
 android/local.properties
+android/key.properties
 *.jks
+*.keystore

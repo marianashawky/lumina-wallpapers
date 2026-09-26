@@ -84,9 +84,19 @@ class _WallpaperDetailScreenState extends State<WallpaperDetailScreen> {
       _busy = true;
       _progress = 0;
     });
+    final target = widget.wallpaper.type == WallpaperType.static ? await _chooseTarget() : WallpaperTarget.both;
+    if (!mounted) return;
+    if (target == null) {
+      setState(() {
+        _busy = false;
+        _progress = null;
+      });
+      return;
+    }
     final result = await deps.setter.setWallpaper(
       widget.wallpaper,
       highQuality: deps.settings.highQuality,
+      target: target,
       onProgress: (value) {
         if (mounted && value >= 0) setState(() => _progress = value);
       },
@@ -97,6 +107,34 @@ class _WallpaperDetailScreenState extends State<WallpaperDetailScreen> {
       _progress = null;
     });
     _toast(result.message);
+  }
+
+  Future<WallpaperTarget?> _chooseTarget() {
+    return showModalBottomSheet<WallpaperTarget>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Home screen'),
+                onTap: () => Navigator.pop(context, WallpaperTarget.home),
+              ),
+              ListTile(
+                title: const Text('Lock screen'),
+                onTap: () => Navigator.pop(context, WallpaperTarget.lock),
+              ),
+              ListTile(
+                title: const Text('Home and lock screen'),
+                onTap: () => Navigator.pop(context, WallpaperTarget.both),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _share() async {
@@ -195,6 +233,8 @@ class _WallpaperDetailScreenState extends State<WallpaperDetailScreen> {
                                 Text(wallpaper.subtitle, style: const TextStyle(color: Colors.white70)),
                               const SizedBox(height: 8),
                               Text(wallpaper.resolutionLabel, style: const TextStyle(color: Colors.white60, fontSize: 13)),
+                              if (wallpaper.creditLine != null)
+                                Text(wallpaper.creditLine!, style: const TextStyle(color: Colors.white54, fontSize: 12)),
                               const SizedBox(height: 12),
                               Wrap(
                                 spacing: 8,
